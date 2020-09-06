@@ -15,16 +15,17 @@ To use it, copy the `bring_shopping_list` folder inside your `config/custom_comp
 ## Configuration
 
 ```
-bring_shopping_list:
-  username: user
-  password: password
-  lists:
-    - id: xxxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
-      name: Home
-      locale: en-US
-    - id: xxxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
-      name: Work
-      locale: de-DE
+sensor:
+  - platform: bring_shopping_list
+    username: user
+    password: password
+    lists:
+      - id: xxxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+        name: Home
+        locale: en-US
+      - id: xxxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+        name: Work
+        locale: de-DE
 ```
 
 #### `username`
