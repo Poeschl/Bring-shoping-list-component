@@ -80,6 +80,7 @@ class BringSensor(CoordinatorEntity):
     @property
     def device_state_attributes(self):
         """Return the state attributes."""
-        attrs = {"Purchase": self.coordinator.items,
+        attrs = {"Purchase": self.coordinator.purchase,
+                 "Recently": self.coordinator.recently,
                  "List_Id": self.coordinator.list_id}
         return attrs

@@ -3,6 +3,7 @@ import logging
 from datetime import timedelta
 from typing import Optional
 
+from BringApi.BringApi import BringApi
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_USERNAME, CONF_PASSWORD, CONF_NAME
 from homeassistant.exceptions import ConfigEntryNotReady
@@ -57,13 +58,13 @@ class BringDataUpdateCoordinator(DataUpdateCoordinator[int]):
 
     def __init__(self, hass, username, password, list_id, name, locale):
         """Initialize Bring data updater."""
-        self.username = username
-        self.password = password
         self.list_id = list_id
         self.locale = locale
         self.name = name
+        self.api = BringApi(username, password, True)
 
-        self.items = []
+        self.purchase = []
+        self.recently = []
 
         super().__init__(
             hass,
@@ -77,23 +78,15 @@ class BringDataUpdateCoordinator(DataUpdateCoordinator[int]):
         This is the only method that should fetch new data for Home Assistant.
         """
 
-        # self._items = []
-        # self._recently = []
-        # # get articles US
-        # url = f"https://web.getbring.com/locale/articles.{self._locale}.json"
-        # articles = get(url=url).json()
-        #
-        # url = f"https://api.getbring.com/rest/bringlists/{self._listId}/details"
-        # details = get(url=url).json()
-        #
-        # url = f'https://api.getbring.com/rest/bringlists/{self._listId}'
-        # data = get(url=url).json()
+        catalog = self.api.loadCatalog(self.locale)
+        details = self.api.get_items_detail()
+        data = self.api.get_items(self.locale)
 
         purchase = data["purchase"]
         recently = data["recently"]
 
-        self._purchase = self._get_list(purchase, details, articles)
-        self._recently = self._get_list(recently, details, articles)
+        self.purchase = self._get_list(purchase, details, catalog)
+        self.recently = self._get_list(recently, details, catalog)
 
         return len(purchase)
 
