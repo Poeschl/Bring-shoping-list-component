@@ -32,6 +32,7 @@ Your username of Bring!
 
 #### `password`
 Your password of Bring!
+If you don't have one since you are loging in via Google or the magic email-link, create one for you.
 
 #### `lists`
 This contains the lists you want to monitor.
@@ -40,7 +41,14 @@ Take a look below for the element syntax.
 ### List entry
 
 #### `id`
-The list id. (TODO: Step-by-step how to get it)
+The list id.
+To get that login follow those steps:
+1. Login on the [web portal](https://web.getbring.com/)
+2. Open the browser dev tools (Ctrl + Shift + I on Chrome)
+3. Open the network tab and clear the history (second icon from the left)
+4. Click on the list you want to integrate on the website
+5. The id is not shown in the network request list of the dev tools.
+6. Click on the column and copy the id from the details.
 
 #### `name` (Optional)
 This is used to make sensor name friendly otherwise id will be used. Example sensor.bring_shopping_list_home
