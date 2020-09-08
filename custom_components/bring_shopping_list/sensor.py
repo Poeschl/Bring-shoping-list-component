@@ -17,7 +17,7 @@ ICONEMPTY = "mdi:cart-outline"
 LOGGER = logging.getLogger(__name__)
 
 LIST_SCHEMA = vol.Schema({
-    vol.Required(CONF_ID): cv.matches_regex('^.{9}-.{4}-.{4}-.{4}-.{12}$'),
+    vol.Required(CONF_ID): cv.matches_regex('^.{8}-.{4}-.{4}-.{4}-.{12}$'),
     vol.Optional(CONF_NAME, default=''): cv.string,
     vol.Optional(CONF_LOCALE, default=DEFAULT_LOCALE): cv.string,
 })
@@ -25,7 +25,7 @@ LIST_SCHEMA = vol.Schema({
 PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
     vol.Required(CONF_USERNAME): cv.string,
     vol.Required(CONF_PASSWORD): cv.string,
-    vol.Required(CONF_LISTS): vol.All(cv.ensure_list, vol.Schema(LIST_SCHEMA)),
+    vol.Required(CONF_LISTS): vol.All(cv.ensure_list, [LIST_SCHEMA]),
 })
 
 

@@ -9,6 +9,5 @@
     ],
     "requirements": [
         "BringApi==0.0.5"
-    ],
-    "config_flow": false
+    ]
 }
