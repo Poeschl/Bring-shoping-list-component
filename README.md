@@ -1,3 +1,7 @@
+# WIP
+
+-------------------------
+
 # Bring! Shopping List Component
 
 This component integrates the [Bring! Shopping List app](https://getbring.com/) into Home Assistant.
