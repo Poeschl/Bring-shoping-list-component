@@ -4,29 +4,39 @@ import homeassistant.helpers.config_validation as cv
 import voluptuous as vol
 from homeassistant.components.sensor import PLATFORM_SCHEMA
 from homeassistant.config_entries import SOURCE_IMPORT
-from homeassistant.const import CONF_NAME, CONF_PASSWORD, CONF_USERNAME, CONF_ID, EVENT_HOMEASSISTANT_START
+from homeassistant.const import (
+    CONF_NAME,
+    CONF_PASSWORD,
+    CONF_USERNAME,
+    CONF_ID,
+    EVENT_HOMEASSISTANT_START,
+)
 from homeassistant.core import callback
 from homeassistant.helpers.event import async_call_later
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
-from custom_components.bring_shopping_list.const import CONF_LISTS, CONF_LOCALE, DEFAULT_LOCALE, DOMAIN, SENSOR_PREFIX
+from .const import CONF_LISTS, CONF_LOCALE, DEFAULT_LOCALE, DOMAIN, SENSOR_PREFIX
 
 ICON = "mdi:cart"
 ICONEMPTY = "mdi:cart-outline"
 
 LOGGER = logging.getLogger(__name__)
 
-LIST_SCHEMA = vol.Schema({
-    vol.Required(CONF_ID): cv.matches_regex('^.{8}-.{4}-.{4}-.{4}-.{12}$'),
-    vol.Optional(CONF_NAME, default=''): cv.string,
-    vol.Optional(CONF_LOCALE, default=DEFAULT_LOCALE): cv.string,
-})
+LIST_SCHEMA = vol.Schema(
+    {
+        vol.Required(CONF_ID): cv.matches_regex("^.{8}-.{4}-.{4}-.{4}-.{12}$"),
+        vol.Optional(CONF_NAME, default=""): cv.string,
+        vol.Optional(CONF_LOCALE, default=DEFAULT_LOCALE): cv.string,
+    }
+)
 
-PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend({
-    vol.Required(CONF_USERNAME): cv.string,
-    vol.Required(CONF_PASSWORD): cv.string,
-    vol.Required(CONF_LISTS): vol.All(cv.ensure_list, [LIST_SCHEMA]),
-})
+PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
+    {
+        vol.Required(CONF_USERNAME): cv.string,
+        vol.Required(CONF_PASSWORD): cv.string,
+        vol.Required(CONF_LISTS): vol.All(cv.ensure_list, [LIST_SCHEMA]),
+    }
+)
 
 
 async def async_setup_platform(hass, config, async_add_entities, discovery_info=None):
@@ -53,15 +63,12 @@ async def async_setup_entry(hass, entry, async_add_entities):
     """Add Bring! shopping list entry."""
     coordinator = hass.data[DOMAIN][entry.entry_id]
 
-    sensors = [
-        BringSensor(coordinator)
-    ]
+    sensors = [BringSensor(coordinator)]
 
     async_add_entities(sensors, True)
 
 
 class BringSensor(CoordinatorEntity):
-
     @property
     def name(self):
         """Return the name of the sensor."""
@@ -80,7 +87,9 @@ class BringSensor(CoordinatorEntity):
     @property
     def device_state_attributes(self):
         """Return the state attributes."""
-        attrs = {"Purchase": self.coordinator.purchase,
-                 "Recently": self.coordinator.recently,
-                 "List_Id": self.coordinator.list_id}
+        attrs = {
+            "Purchase": self.coordinator.purchase,
+            "Recently": self.coordinator.recently,
+            "List_Id": self.coordinator.list_id,
+        }
         return attrs

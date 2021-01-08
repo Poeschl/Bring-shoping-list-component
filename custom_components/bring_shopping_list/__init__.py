@@ -10,7 +10,7 @@ from homeassistant.exceptions import ConfigEntryNotReady
 from homeassistant.helpers.typing import HomeAssistantType
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 
-from custom_components.bring_shopping_list.const import CONF_LOCALE, CONF_LISTS, DEFAULT_LOCALE, SENSOR_PREFIX, DOMAIN
+from .const import CONF_LOCALE, CONF_LISTS, DEFAULT_LOCALE, SENSOR_PREFIX, DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -30,7 +30,9 @@ async def async_setup_entry(hass: HomeAssistantType, entry: ConfigEntry):
     name = entry.data.get(CONF_NAME, list_id)
     locale = entry.data(CONF_LOCALE, DEFAULT_LOCALE)
 
-    coordinator = BringDataUpdateCoordinator(hass, username, password, list_id, name, locale)
+    coordinator = BringDataUpdateCoordinator(
+        hass, username, password, list_id, name, locale
+    )
     await coordinator.async_refresh()
 
     if not coordinator.last_update_success:
@@ -40,7 +42,9 @@ async def async_setup_entry(hass: HomeAssistantType, entry: ConfigEntry):
     hass.data[DOMAIN][entry.entry_id] = coordinator
 
     if entry.unique_id is None:
-        hass.config_entries.async_update_entry(entry, unique_id=f"{SENSOR_PREFIX}{list_id}")
+        hass.config_entries.async_update_entry(
+            entry, unique_id=f"{SENSOR_PREFIX}{list_id}"
+        )
 
     hass.async_create_task(
         hass.config_entries.async_forward_entry_setup(entry, "sensor")
@@ -101,9 +105,11 @@ class BringDataUpdateCoordinator(DataUpdateCoordinator[int]):
                     found = True
                     break
 
-            item = {"image": p["name"],
-                    "name": p["name"],
-                    "specification": p["specificitemation"]}
+            item = {
+                "image": p["name"],
+                "name": p["name"],
+                "specification": p["specificitemation"],
+            }
 
             if found:
                 item["image"] = d["userIconItemId"]
@@ -133,10 +139,12 @@ class BringDataUpdateCoordinator(DataUpdateCoordinator[int]):
 
     @staticmethod
     def _purge(item):
-        return item.lower() \
-            .replace("é", "e") \
-            .replace("ä", "ae") \
-            .replace("-", "_") \
-            .replace("ö", "oe") \
-            .replace("ü", "ue") \
+        return (
+            item.lower()
+            .replace("é", "e")
+            .replace("ä", "ae")
+            .replace("-", "_")
+            .replace("ö", "oe")
+            .replace("ü", "ue")
             .replace(" ", "_")
+        )
